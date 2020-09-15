@@ -32,16 +32,10 @@ class MainActivity : AppCompatActivity() {
 
 
         switch_main_useless.setOnCheckedChangeListener { compoundButton, isChecked ->
-            // 1. toast the status of the button (checked, or not checked)
-
-            // can assign the result of an if statement as a val
-            // only in Kotlin
             val message = if(isChecked) "Switch is ON" else "Switch is OFF"
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-            // could also do:
-            // Toast.makeText(this, "The button is: ${isChecked.toString()}", Toast.LENGTH_SHORT).show()
 
-            // 2. if the button is checked, uncheck it
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+
             if(isChecked) {
 
                 val uncheckTimer = object: CountDownTimer(5000, 1000) {
@@ -78,8 +72,6 @@ class MainActivity : AppCompatActivity() {
                 }
                 uncheckTimer.start()
             }
-
-
         }
 
         button_main_self_destruct.setOnClickListener {
@@ -90,12 +82,13 @@ class MainActivity : AppCompatActivity() {
             // make the button no longer clickable
             // d. get the screen to flash a different color at every instance of an interval
             // e. get the screen to flash faster the less time is remaining in the countdown
+            button_main_self_destruct.isClickable = false
 
             val uncheckTimer = object: CountDownTimer(5000, 500) {
 
                 // use for changing bg color
                 private var isRed = false
-                private var difference = 1L // L makes it a long var type instead of int
+                private var count = 10
 
                 override fun onFinish() {
                     finish()
@@ -110,6 +103,8 @@ class MainActivity : AppCompatActivity() {
                         layout_main.setBackgroundColor(Color.rgb(255, 255, 255))
                     }
                     isRed = !isRed
+                    Toast.makeText(this@MainActivity, count.toString(), Toast.LENGTH_SHORT).show()
+                    count--
                 }
             }
             uncheckTimer.start()
