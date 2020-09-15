@@ -31,7 +31,6 @@ class MainActivity : AppCompatActivity() {
                     button_main_self_destruct.setVisibility(View.VISIBLE)
                     switch_main_useless.setVisibility(View.VISIBLE)
                     button_main_look_busy.setVisibility(View.VISIBLE)
-
                 }
 
                 override fun onTick(millisRemaining: Long) {
@@ -41,27 +40,17 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             uncheckTimer.start()
-
         }
-
-        // to listen to a switch, you can use the OnCheckedChangeListener
-        // rely on documentation a lot in this class
-
 
         switch_main_useless.setOnCheckedChangeListener { compoundButton, isChecked ->
             if(isChecked) {
-
-                val uncheckTimer = object: CountDownTimer(3500, 1000) {
-                    // TODO
-                    // 1. Switch
-                        // a. randomize the time so it doesn't always turn off at a fixed interval
-                        // b. if the switch is manually turned off early, we cancel the timer
-                                // so if it gets turned back on we don't gave multiple timers running simultaneously
-
+                val uncheckTimer = object: CountDownTimer(10000, 1000) {
+                    // TODO if the switch is manually turned off early, we cancel the timer
                     override fun onFinish() {
                         switch_main_useless.toggle()
                     }
 
+                    // TODO ask Mr. Shorr about timer cancel not working bc switch is already checked
                     override fun onTick(millisRemaining: Long) {
                         if(switch_main_useless.isChecked) {
                             cancel()
@@ -73,14 +62,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         button_main_self_destruct.setOnClickListener {
-            // 2. Self-Destruct Button
-
             // TODO e. get the screen to flash faster the less time is remaining in the countdown
             button_main_self_destruct.isClickable = false
             button_main_self_destruct.isEnabled = false
 
             val uncheckTimer = object: CountDownTimer(5000, 500) {
-                // use for changing bg color
                 private var isRed = false
                 private var count = 10
 
