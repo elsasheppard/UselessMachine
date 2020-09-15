@@ -103,7 +103,7 @@ class MainActivity : AppCompatActivity() {
                         layout_main.setBackgroundColor(Color.rgb(255, 255, 255))
                     }
                     isRed = !isRed
-                    Toast.makeText(this@MainActivity, count.toString(), Toast.LENGTH_SHORT).show()
+                    button_main_self_destruct.setText(count.toString())
                     count--
                 }
             }
