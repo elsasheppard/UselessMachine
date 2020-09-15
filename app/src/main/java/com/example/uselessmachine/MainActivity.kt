@@ -4,8 +4,10 @@ import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.view.View
 import android.widget.Button
 import android.widget.Toast
+import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.activity_main.*
 
 // MainActivity extends AppCompatActivity
@@ -22,9 +24,11 @@ class MainActivity : AppCompatActivity() {
         // when there is one parameter in the function, "it" is used to refer to that parameter
         // ${} is a string concatenation template
 
+        main_progress_look_busy.setVisibility(View.GONE)
+
         button_main_look_busy.setOnClickListener {
             Toast.makeText(this, "Hello, this is the text on the button ${(it as Button).text.toString()}", Toast.LENGTH_SHORT).show()
-
+            main_progress_look_busy.setVisibility(View.VISIBLE)
         }
 
         // to listen to a switch, you can use the OnCheckedChangeListener
@@ -32,18 +36,9 @@ class MainActivity : AppCompatActivity() {
 
 
         switch_main_useless.setOnCheckedChangeListener { compoundButton, isChecked ->
-            val message = if(isChecked) "Switch is ON" else "Switch is OFF"
-
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-
             if(isChecked) {
 
-                val uncheckTimer = object: CountDownTimer(5000, 1000) {
-
-                    // use for changing bg color
-                    private var isRed = false
-                    private var difference = 1L // L makes it a long var type instead of int
-
+                val uncheckTimer = object: CountDownTimer(1000, 1000) {
                     // TODO
                     // 1. Switch
                         // a. randomize the time so it doesn't always turn off at a fixed interval
@@ -53,10 +48,7 @@ class MainActivity : AppCompatActivity() {
 
 
                     override fun onFinish() {
-                        // change ConstraintLayout name to layout_main
-                        layout_main.setBackgroundColor(Color.rgb((0..255).random(), (0..255).random(), (0..255).random()))
-                        switch_main_useless.isChecked = false
-                        // when done, turn off
+                        switch_main_useless.toggle()
                     }
 
                     // p0 --> millisRemaining
@@ -64,10 +56,6 @@ class MainActivity : AppCompatActivity() {
                         if(switch_main_useless.isChecked) {
                             cancel()
                         }
-                        if(isRed) {
-                            layout_main.setBackgroundColor(Color.rgb(255, 0, 0))
-                        }
-                        isRed = !isRed
                     }
                 }
                 uncheckTimer.start()
@@ -76,16 +64,12 @@ class MainActivity : AppCompatActivity() {
 
         button_main_self_destruct.setOnClickListener {
             // 2. Self-Destruct Button
-            // a. 10 second countdown timer to display on the button
-            // b. when the timer is up, call the finish() method to close activity
-            // c. lock out the button by setting its enabled attribute to false
-            // make the button no longer clickable
-            // d. get the screen to flash a different color at every instance of an interval
-            // e. get the screen to flash faster the less time is remaining in the countdown
+
+            // TODO e. get the screen to flash faster the less time is remaining in the countdown
             button_main_self_destruct.isClickable = false
+            button_main_self_destruct.isEnabled = false
 
             val uncheckTimer = object: CountDownTimer(5000, 500) {
-
                 // use for changing bg color
                 private var isRed = false
                 private var count = 10
@@ -94,7 +78,6 @@ class MainActivity : AppCompatActivity() {
                     finish()
                 }
 
-                // p0 --> millisRemaining
                 override fun onTick(millisRemaining: Long) {
                     if(isRed) {
                         layout_main.setBackgroundColor(Color.rgb(255, 0, 0))
