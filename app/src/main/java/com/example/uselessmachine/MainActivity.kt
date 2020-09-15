@@ -42,17 +42,18 @@ class MainActivity : AppCompatActivity() {
             uncheckTimer.start()
         }
 
+        // compoundButton and isChecked --> parameters the lambda class is using
         switch_main_useless.setOnCheckedChangeListener { compoundButton, isChecked ->
             if(isChecked) {
                 val uncheckTimer = object: CountDownTimer(10000, 1000) {
-                    // TODO if the switch is manually turned off early, we cancel the timer
                     override fun onFinish() {
                         switch_main_useless.toggle()
                     }
 
-                    // TODO ask Mr. Shorr about timer cancel not working bc switch is already checked
                     override fun onTick(millisRemaining: Long) {
-                        if(switch_main_useless.isChecked) {
+                        // HAVE TO USE !
+                        // Want it to switch off if switch is pressed AGAIN
+                        if(!switch_main_useless.isChecked) {
                             cancel()
                         }
                     }
@@ -66,24 +67,48 @@ class MainActivity : AppCompatActivity() {
             button_main_self_destruct.isClickable = false
             button_main_self_destruct.isEnabled = false
 
-            val uncheckTimer = object: CountDownTimer(5000, 500) {
+            // parameter numbers have to be LONG type
+            val uncheckTimer = object: CountDownTimer((1000..5000).random().toLong(), 250) {
                 private var isRed = false
-                private var count = 10
+                private var lastTime = 10000L // last time it flashed
+                private var duration = 500 // time between flashes
 
                 override fun onFinish() {
                     finish()
                 }
 
-                override fun onTick(millisRemaining: Long) {
-                    if(isRed) {
-                        layout_main.setBackgroundColor(Color.rgb(255, 0, 0))
+                override fun onTick(millisUntilFinished: Long) {
+                    button_main_self_destruct.text = (millisUntilFinished/1000).toString()
+
+                    if (lastTime - millisUntilFinished >= duration) {
+                        if (!isRed) {
+                            layout_main.setBackgroundColor(Color.rgb(255, 0, 0))
+                        }
+                        else {
+                            layout_main.setBackgroundColor(Color.rgb(255, 255, 255))
+                        }
+                        isRed = !isRed
+                        lastTime = millisUntilFinished
+                    }
+
+                    duration = when (millisUntilFinished) {
+                        in 5000..Integer.MAX_VALUE -> 500
+                        in 2500..4999 -> 250
+                        else -> 100
+                    }
+
+                    /*
+                    the java way of code above
+                    if(millisUntilFinished >= 5000) {
+                        duration = 500
+                    }
+                    else if (millisUntilFinished >= 2500) {
+                        duration = 250
                     }
                     else {
-                        layout_main.setBackgroundColor(Color.rgb(255, 255, 255))
+                        duration = 100
                     }
-                    isRed = !isRed
-                    button_main_self_destruct.setText(count.toString())
-                    count--
+                    */
                 }
             }
             uncheckTimer.start()
