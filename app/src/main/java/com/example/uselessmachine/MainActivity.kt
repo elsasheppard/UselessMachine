@@ -63,52 +63,44 @@ class MainActivity : AppCompatActivity() {
         }
 
         button_main_self_destruct.setOnClickListener {
-            // TODO e. get the screen to flash faster the less time is remaining in the countdown
             button_main_self_destruct.isClickable = false
             button_main_self_destruct.isEnabled = false
 
             // parameter numbers have to be LONG type
-            val uncheckTimer = object: CountDownTimer((1000..5000).random().toLong(), 250) {
+            val uncheckTimer = object: CountDownTimer((10000).toLong(), 250) {
                 private var isRed = false
                 private var lastTime = 10000L // last time it flashed
                 private var duration = 500 // time between flashes
+                var rate = 0
 
                 override fun onFinish() {
                     finish()
                 }
 
-                override fun onTick(millisUntilFinished: Long) {
-                    button_main_self_destruct.text = (millisUntilFinished/1000).toString()
-
-                    if (lastTime - millisUntilFinished >= duration) {
-                        if (!isRed) {
-                            layout_main.setBackgroundColor(Color.rgb(255, 0, 0))
+                override fun onTick(millisRemaining: Long) {
+                    button_main_self_destruct.text = ((millisRemaining / 1000.0).toInt()).toString()
+                    rate++
+                    if (millisRemaining > 3000 && rate % 3 == 0) {
+                        if (isRed) {
+                            layout_main.setBackgroundColor(Color.rgb(255, 255, 255))
+                            isRed = !isRed
                         }
                         else {
-                            layout_main.setBackgroundColor(Color.rgb(255, 255, 255))
+                            layout_main.setBackgroundColor(Color.rgb(255, 0, 0))
+                            isRed = !isRed
                         }
-                        isRed = !isRed
-                        lastTime = millisUntilFinished
                     }
 
-                    duration = when (millisUntilFinished) {
-                        in 5000..Integer.MAX_VALUE -> 500
-                        in 2500..4999 -> 250
-                        else -> 100
+                    else if (millisRemaining <= 3500) {
+                        if (isRed) {
+                            layout_main.setBackgroundColor(Color.rgb(255, 255, 255))
+                            isRed = !isRed
+                        }
+                        else {
+                            layout_main.setBackgroundColor(Color.rgb(255, 0, 0))
+                            isRed = !isRed
+                        }
                     }
-
-                    /*
-                    the java way of code above
-                    if(millisUntilFinished >= 5000) {
-                        duration = 500
-                    }
-                    else if (millisUntilFinished >= 2500) {
-                        duration = 250
-                    }
-                    else {
-                        duration = 100
-                    }
-                    */
                 }
             }
             uncheckTimer.start()
