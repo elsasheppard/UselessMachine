@@ -83,24 +83,21 @@ class MainActivity : AppCompatActivity() {
                     if (millisRemaining > 3000 && rate % 3 == 0) {
                         if (isRed) {
                             layout_main.setBackgroundColor(Color.rgb(255, 255, 255))
-                            isRed = !isRed
                         }
                         else {
                             layout_main.setBackgroundColor(Color.rgb(255, 0, 0))
-                            isRed = !isRed
                         }
                     }
 
                     else if (millisRemaining <= 3500) {
                         if (isRed) {
                             layout_main.setBackgroundColor(Color.rgb(255, 255, 255))
-                            isRed = !isRed
                         }
                         else {
                             layout_main.setBackgroundColor(Color.rgb(255, 0, 0))
-                            isRed = !isRed
                         }
                     }
+                    isRed = !isRed
                 }
             }
             uncheckTimer.start()
